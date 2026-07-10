@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#172554" />
+  <meta name="description" content="Loren's Variable Income Planner" />
+  <title>VIP — Variable Income Planner</title>
+  <style>
+    :root {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: #14213d;
+      background: #f4f7fb;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; min-height: 100vh; }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .shell { width: min(100%, 760px); margin: 0 auto; padding: 20px 14px 48px; }
+    .hero { padding: 18px 6px 10px; }
+    h1, h2, p { margin-top: 0; }
+    h1 { margin-bottom: 10px; font-size: clamp(2rem, 8vw, 3.25rem); line-height: 1.02; letter-spacing: -0.045em; color: #172554; }
+    h2 { margin-bottom: 0; font-size: 1.25rem; }
+    .eyebrow { margin-bottom: 6px; color: #53657f; font-weight: 800; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; }
+    .subtle, .empty, .notice p { color: #596b83; line-height: 1.55; }
+    .card { margin-top: 14px; padding: 18px; border: 1px solid #dce5f0; border-radius: 20px; background: #fff; box-shadow: 0 10px 30px rgba(23,37,84,.06); }
+    .status-card { background: linear-gradient(150deg, #fff 0%, #edf4ff 100%); }
+    .section-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+    .badge { display: inline-flex; align-items: center; min-height: 30px; padding: 5px 10px; border-radius: 999px; background: #e8eef7; color: #34465f; font-size: .8rem; font-weight: 800; }
+    .badge.good { background: #dcfce7; color: #166534; }
+    .badge.warn { background: #fff7d6; color: #854d0e; }
+    .metric-grid, .result { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
+    .metric-grid > div, .result > div { padding: 12px; border-radius: 14px; background: rgba(255,255,255,.78); }
+    .metric-grid span, .result span, .segment span, .shift-item span { display: block; color: #64748b; font-size: .78rem; }
+    .metric-grid strong, .result strong { display: block; margin-top: 4px; font-size: clamp(1rem,4vw,1.35rem); }
+    .progress { height: 10px; margin: 15px 0; overflow: hidden; border-radius: 999px; background: #dbe5f2; }
+    .progress div { height: 100%; border-radius: inherit; background: #2563eb; transition: width .2s ease; }
+    .settings-grid, .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-grid .full, .settings-grid label:last-child { grid-column: 1 / -1; }
+    label { display: grid; gap: 6px; color: #45566e; font-size: .82rem; font-weight: 750; }
+    input, select { width: 100%; min-height: 46px; padding: 10px 11px; border: 1px solid #cbd7e5; border-radius: 12px; background: #fff; color: #172554; }
+    input:focus, select:focus, button:focus-visible { outline: 3px solid rgba(37,99,235,.22); outline-offset: 2px; }
+    .template-row { display: flex; gap: 8px; margin-bottom: 14px; overflow-x: auto; padding-bottom: 3px; }
+    .chip { flex: 0 0 auto; padding: 8px 12px; border: 1px solid #cbd7e5; border-radius: 999px; background: #f8fafc; color: #334155; font-weight: 750; }
+    .result { margin-top: 16px; }
+    .result > div { background: #eff5ff; }
+    details { margin-top: 14px; border-top: 1px solid #e5ebf3; padding-top: 12px; }
+    summary { color: #1d4ed8; font-weight: 800; cursor: pointer; }
+    .segments { margin-top: 10px; }
+    .segment, .shift-item { display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid #e8edf4; }
+    .segment-pay { text-align: right; }
+    .primary { width: 100%; min-height: 50px; margin-top: 16px; border: 0; border-radius: 14px; background: #1d4ed8; color: #fff; font-weight: 850; }
+    .shift-list { display: grid; }
+    .shift-item { align-items: center; }
+    .shift-item > div { display: grid; gap: 3px; }
+    .danger { padding: 8px 9px; border: 1px solid #fecaca; border-radius: 10px; background: #fff1f2; color: #be123c; font-size: .8rem; font-weight: 800; }
+    .notice { margin: 16px 4px 0; padding: 15px; border-left: 4px solid #f59e0b; border-radius: 4px 14px 14px 4px; background: #fffbeb; }
+    .notice p { margin: 5px 0 0; font-size: .88rem; }
+    @media (max-width: 520px) {
+      .metric-grid, .result { grid-template-columns: 1fr; }
+      .metric-grid > div, .result > div { display: flex; align-items: center; justify-content: space-between; }
+      .metric-grid strong, .result strong { margin-top: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="hero">
+      <p class="eyebrow">Variable Income Planner</p>
+      <h1>Should Loren accept this shift?</h1>
+      <p class="subtle">Estimate shift pay and track progress through the current childcare period.</p>
+    </header>
+
+    <section class="card status-card">
+      <div class="section-heading">
+        <div><p class="eyebrow">Assessment period</p><h2>Progress</h2></div>
+        <span id="statusBadge" class="badge warn">In progress</span>
+      </div>
+      <div class="metric-grid">
+        <div><span>Recorded</span><strong id="recorded">£0.00</strong></div>
+        <div><span>Target</span><strong id="targetDisplay">£0.00</strong></div>
+        <div><span>Remaining</span><strong id="remaining">£0.00</strong></div>
+      </div>
+      <div class="progress"><div id="progressBar" style="width:0%"></div></div>
+      <div class="settings-grid">
+        <label>Period starts<input id="assessmentStart" type="date"></label>
+        <label>Period ends<input id="assessmentEnd" type="date"></label>
+        <label>Earnings target<input id="targetEarnings" type="number" min="0" step="10"></label>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-heading"><div><p class="eyebrow">New shift</p><h2>Shift calculator</h2></div></div>
+      <div class="template-row">
+        <button class="chip" data-template="Early">Early</button>
+        <button class="chip" data-template="Late">Late</button>
+        <button class="chip" data-template="Long day">Long day</button>
+        <button class="chip" data-template="Night">Night</button>
+      </div>
+      <div class="form-grid">
+        <label class="full">Date<input id="date" type="date"></label>
+        <label>Starts<input id="startTime" type="time"></label>
+        <label>Finishes<input id="endTime" type="time"></label>
+        <label>Unpaid break
+          <select id="breakMinutes">
+            <option value="0">No break</option>
+            <option value="30">30 minutes</option>
+            <option value="45">45 minutes</option>
+            <option value="60">60 minutes</option>
+          </select>
+        </label>
+        <label>Overtime
+          <select id="overtime">
+            <option value="1">No overtime</option>
+            <option value="1.25">1.25×</option>
+            <option value="1.5">1.5×</option>
+            <option value="2">2×</option>
+          </select>
+        </label>
+      </div>
+      <div class="result">
+        <div><span>Paid hours</span><strong id="paidHours">0.00</strong></div>
+        <div><span>Estimated gross</span><strong id="grossPay">£0.00</strong></div>
+        <div><span>After adding</span><strong id="afterAdding">£0.00</strong></div>
+      </div>
+      <details>
+        <summary>Show pay calculation</summary>
+        <div id="segments" class="segments"></div>
+      </details>
+      <button id="addShift" class="primary">Add shift</button>
+    </section>
+
+    <section class="card">
+      <div class="section-heading">
+        <div><p class="eyebrow">Saved locally</p><h2>Recorded shifts</h2></div>
+        <span id="shiftCount" class="badge">0</span>
+      </div>
+      <div id="shiftList"></div>
+    </section>
+
+    <section class="notice">
+      <strong>Planning estimate only.</strong>
+      <p>The MVP currently assumes £17/hour, weekday nights at 1.3×, Saturdays at 1.6× and Sundays at 2×. It applies the highest rate to each segment and deducts unpaid breaks from the lowest-paid segment first.</p>
+    </section>
+  </main>
+
+  <script>
+    const BASE_RATE = 17;
+    const SHIFTS_KEY = "vip-shifts-v1";
+    const SETTINGS_KEY = "vip-settings-v1";
+    const templates = {
+      "Early": { startTime: "07:00", endTime: "15:00", breakMinutes: 60 },
+      "Late": { startTime: "13:00", endTime: "20:00", breakMinutes: 60 },
+      "Long day": { startTime: "07:00", endTime: "20:00", breakMinutes: 60 },
+      "Night": { startTime: "19:00", endTime: "07:30", breakMinutes: 60 }
+    };
+    const defaults = {
+      assessmentStart: "2026-05-24",
+      assessmentEnd: "2026-08-24",
+      targetEarnings: 13 * 16 * 12.21
+    };
+
+    let shifts = JSON.parse(localStorage.getItem(SHIFTS_KEY) || "[]");
+    let settings = { ...defaults, ...JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}") };
+    let currentLabel = "Early";
+
+    const $ = id => document.getElementById(id);
+    const money = value => new Intl.NumberFormat("en-GB",{style:"currency",currency:"GBP"}).format(value);
+    const pad = n => String(n).padStart(2,"0");
+    const localDate = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+
+    function combine(date, time) {
+      return new Date(`${date}T${time}:00`);
+    }
+    function bounds(date, startTime, endTime) {
+      const start = combine(date,startTime);
+      let end = combine(date,endTime);
+      if (end <= start) end.setDate(end.getDate()+1);
+      return {start,end};
+    }
+    function hours(a,b) { return (b-a)/3600000; }
+    function rateAt(d) {
+      const day = d.getDay();
+      const hour = d.getHours() + d.getMinutes()/60;
+      if (day === 0) return {multiplier:2,label:"Sunday"};
+      if (day === 6) return {multiplier:1.6,label:"Saturday"};
+      if (hour >= 20 || hour < 6) return {multiplier:1.3,label:"Weekday night"};
+      return {multiplier:1,label:"Basic"};
+    }
+    function calculate(shift) {
+      const {start,end} = bounds(shift.date,shift.startTime,shift.endTime);
+      const buckets = [];
+      let cursor = new Date(start);
+      while (cursor < end) {
+        const next = new Date(Math.min(cursor.getTime()+15*60000,end.getTime()));
+        const rate = rateAt(cursor);
+        const prev = buckets[buckets.length-1];
+        if (prev && prev.multiplier === rate.multiplier && prev.label === rate.label) prev.end = next;
+        else buckets.push({start:new Date(cursor),end:new Date(next),...rate});
+        cursor = next;
+      }
+      const paid = buckets.map(b=>hours(b.start,b.end));
+      let breakHours = Math.max(0,shift.breakMinutes)/60;
+      const order = buckets.map((b,i)=>({i,m:b.multiplier})).sort((a,b)=>a.m-b.m);
+      for (const item of order) {
+        if (breakHours <= 0) break;
+        const deduction = Math.min(paid[item.i],breakHours);
+        paid[item.i] -= deduction;
+        breakHours -= deduction;
+      }
+      const overtime = shift.overtime || 1;
+      const segments = buckets.map((b,i)=>{
+        const multiplier = b.multiplier * overtime;
+        const ph = paid[i];
+        return {...b,paidHours:ph,multiplier,pay:ph*BASE_RATE*multiplier,label:overtime>1?`${b.label} × overtime`:b.label};
+      });
+      return {
+        paidHours: segments.reduce((s,x)=>s+x.paidHours,0),
+        grossPay: segments.reduce((s,x)=>s+x.pay,0),
+        segments
+      };
+    }
+    function inRange(date) { return date >= settings.assessmentStart && date <= settings.assessmentEnd; }
+    function currentDraft() {
+      return {
+        id: crypto.randomUUID(),
+        label: currentLabel,
+        date: $("date").value,
+        startTime: $("startTime").value,
+        endTime: $("endTime").value,
+        breakMinutes: Number($("breakMinutes").value),
+        overtime: Number($("overtime").value)
+      };
+    }
+    function fmt(d) {
+      return d.toLocaleString("en-GB",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"});
+    }
+    function totalRecorded() {
+      return shifts.filter(s=>inRange(s.date)).reduce((sum,s)=>sum+calculate(s).grossPay,0);
+    }
+    function save() {
+      localStorage.setItem(SHIFTS_KEY,JSON.stringify(shifts));
+      localStorage.setItem(SETTINGS_KEY,JSON.stringify(settings));
+    }
+    function render() {
+      const total = totalRecorded();
+      const shortfall = Math.max(0,settings.targetEarnings-total);
+      const progress = settings.targetEarnings ? Math.min(100,total/settings.targetEarnings*100) : 0;
+      $("recorded").textContent = money(total);
+      $("targetDisplay").textContent = money(settings.targetEarnings);
+      $("remaining").textContent = money(shortfall);
+      $("progressBar").style.width = `${progress}%`;
+      $("statusBadge").textContent = shortfall===0?"Target met":"In progress";
+      $("statusBadge").className = `badge ${shortfall===0?"good":"warn"}`;
+
+      const draft = currentDraft();
+      const result = calculate(draft);
+      $("paidHours").textContent = result.paidHours.toFixed(2);
+      $("grossPay").textContent = money(result.grossPay);
+      $("afterAdding").textContent = money(total+result.grossPay);
+      $("segments").innerHTML = result.segments.map(s=>`
+        <div class="segment">
+          <div><strong>${s.label}</strong><span>${fmt(s.start)}–${fmt(s.end)}</span></div>
+          <div class="segment-pay"><strong>${money(s.pay)}</strong><span>${s.paidHours.toFixed(2)}h at ${s.multiplier.toFixed(2)}×</span></div>
+        </div>`).join("");
+
+      const assessed = shifts.filter(s=>inRange(s.date));
+      $("shiftCount").textContent = assessed.length;
+      $("shiftList").innerHTML = shifts.length ? `<div class="shift-list">${shifts.map(s=>{
+        const r=calculate(s);
+        return `<article class="shift-item">
+          <div><strong>${s.label||"Custom shift"}</strong><span>${s.date} · ${s.startTime}–${s.endTime}</span><span>${r.paidHours.toFixed(2)} paid hours · ${money(r.grossPay)}</span></div>
+          <button class="danger" data-delete="${s.id}">Delete</button>
+        </article>`;
+      }).join("")}</div>` : `<p class="empty">No shifts recorded yet.</p>`;
+      document.querySelectorAll("[data-delete]").forEach(btn=>btn.onclick=()=>{
+        shifts = shifts.filter(s=>s.id!==btn.dataset.delete); save(); render();
+      });
+    }
+
+    $("date").value = localDate(new Date());
+    $("assessmentStart").value = settings.assessmentStart;
+    $("assessmentEnd").value = settings.assessmentEnd;
+    $("targetEarnings").value = settings.targetEarnings;
+    Object.entries(templates.Early).forEach(([k,v])=>{
+      if(k==="breakMinutes") $("breakMinutes").value=v;
+      else $(k).value=v;
+    });
+
+    document.querySelectorAll("[data-template]").forEach(btn=>btn.onclick=()=>{
+      currentLabel=btn.dataset.template;
+      const t=templates[currentLabel];
+      $("startTime").value=t.startTime;
+      $("endTime").value=t.endTime;
+      $("breakMinutes").value=t.breakMinutes;
+      render();
+    });
+    ["date","startTime","endTime","breakMinutes","overtime"].forEach(id=>$(id).addEventListener("input",render));
+    $("assessmentStart").addEventListener("input",e=>{settings.assessmentStart=e.target.value;save();render();});
+    $("assessmentEnd").addEventListener("input",e=>{settings.assessmentEnd=e.target.value;save();render();});
+    $("targetEarnings").addEventListener("input",e=>{settings.targetEarnings=Number(e.target.value);save();render();});
+    $("addShift").onclick=()=>{shifts.unshift(currentDraft());save();render();};
+
+    render();
+  </script>
+</body>
+</html>
