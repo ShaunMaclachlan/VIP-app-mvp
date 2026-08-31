@@ -120,3 +120,31 @@ This contract was established on 2026-08-30 after the product owner identified t
 **Exact continuation reason:** safe meaningful engineering work remains in source recovery; feature development is intentionally deferred until a maintainable baseline is recovered or re-established.  
 **Observable platform restriction:** none observed.  
 **Agent execution truth:** logical architecture/reliability/reviewer roles were performed serially in one observable execution context; no independent sub-agent is claimed.
+
+## 2026-08-31 09:00 Europe/London — Source recovery investigation
+
+**Starting main:** `1149d22ff410501c21021a1bd82d0842abfb8c57`  
+**Repository/history evidence:** commit history was inspected back to the initial MVP upload. The initial commit `4246357` contains a readable single-file HTML/CSS/JavaScript MVP. The later V2 commit `ef2e7c1` still shows readable application source in `index.html`. By commit `3939b2d` (`Publish reviewed VIP build for Loren`) the deployment changes to hashed compiled CSS/JavaScript assets, and subsequent July commits continue publishing compiled assets. Repository code search finds no `package.json`, and the connected account exposes no second VIP source repository.  
+**Interpretation:** there is recoverable historical *behavioural/source evidence*, but no durable modern source project corresponding to the current compiled deployment. The source loss boundary is therefore narrowed: maintainable source existed in the early single-file implementation, while the later React-style compiled deployment was published without its source/build/test tree.  
+**Active lanes:** Architecture; Reliability / Recovery; Documentation / Contracts; Release Management.  
+**Observable concurrency:** one connected execution context; no independent sub-agent/worker execution observable.  
+**Loops:** 1 source-recovery investigation loop completed; 0 application implementation loops; 0 repair cycles.  
+**Tests / CI / regression:** none claimed because the modern source/build harness is still absent.  
+**Checkpoint usefulness:** useful independent progress; narrowed the recovery problem from "source missing" to a specific historical transition and identified a readable fallback baseline.
+
+**Finding F-20260831-03 — HIGH**  
+**Area:** architecture / recovery / provenance  
+**Evidence:** `4246357` and `ef2e7c1` expose readable application logic in `index.html`; `3939b2d` and later deployment commits expose hashed compiled assets; no `package.json` or modern source tree is present on current `main`, and no alternate connected VIP repository is visible.  
+**Risk:** treating the early single-file MVP as if it were the exact source for the current deployed app would silently discard later functionality; treating the minified current bundle as maintainable source would undermine deterministic testing and review.  
+**Required evidence or repair:** re-establish a maintainable source project using (a) current deployed behaviour as the behavioural reference, (b) readable historical MVP logic as provenance/reference, and (c) approved durable product decisions as requirements. Do this as an explicit recovery/rebuild task with parity tests before new feature work.  
+**Disposition:** OPEN; recovery path is now defined but not yet implemented.  
+**Repair commit/artefact:** this audit entry plus historical commits `4246357`, `ef2e7c1`, `3939b2d`.  
+**Reviewer recheck:** PENDING rebuilt source + parity evidence.
+
+**Ordered next work:** (1) inventory current deployed behaviours from compiled/static app without modifying bundles; (2) inventory readable historical pay/shift logic and approved product contracts; (3) create a maintainable source/build/test project on an isolated recovery branch; (4) establish deterministic parity/golden tests for existing behaviour before adding new functionality; (5) adversarially review the recovery diff for lost functionality/privacy/pay-rule assumptions; (6) only merge after build/test/recovery evidence passes.  
+**Decisions / user evidence:** no new product-owner decision required. Source re-establishment is an engineering prerequisite; no new pay/tax assumption is authorised by this recovery work.  
+**Code metrics:** merged application-code delta 0; documentation-only recovery evidence added. Historical compiled/minified LOC intentionally excluded.  
+**Non-code output:** source provenance map, recovery boundary, explicit rebuild strategy, third contemporaneous Markdown checkpoint under the new audit standard.  
+**Exact continuation reason:** meaningful safe recovery work remains; implementation should proceed through an isolated auditable recovery branch rather than feature-editing compiled assets.  
+**Observable platform restriction:** none observed.  
+**Agent execution truth:** planner, architecture/recovery and sceptical-review roles were logical serial roles in one observable execution context. No claim of independently running sub-agents is made.
