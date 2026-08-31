@@ -93,3 +93,30 @@ This contract was established on 2026-08-30 after the product owner identified t
 **Exact continuation reason:** meaningful safe work remains, but application implementation must restart from the actual durable repository baseline rather than unverified conversational state.  
 **Observable platform restriction:** none observed.  
 **Agent execution truth:** this checkpoint used logical orchestration/reviewer roles serially in one observable execution context; no claim of independent sub-agents is made.
+
+## 2026-08-31 06:00 Europe/London — Baseline reconstruction checkpoint
+
+**Starting main:** `418da14b6bb05bcd2dbcf5e2a6961504cbf22fba`  
+**Repository observation:** source-of-truth inspection confirms the repository is currently a compiled static web-app deployment rather than a maintainable source tree: root contains `index.html`, `assets/`, and `docs/`; `index.html` loads hashed compiled JavaScript/CSS from `assets/`. GitHub exposes only `main` and no open PRs. There is no root README/package/source/test tree visible in the connected durable baseline.  
+**Active lanes:** Architecture; Reliability / Ops; Documentation / Contracts; Release Management.  
+**Observable concurrency:** one connected execution context; no independent sub-agent execution observable.  
+**Loops:** 1 baseline reconstruction/adversarial architecture loop completed; 0 application implementation loops; 0 repair cycles.  
+**Tests / CI / regression:** no maintainable source/test harness is present in the connected baseline, so no truthful application test run is claimed. Existing compiled deployment assets were inspected only.  
+**Checkpoint usefulness:** converted the prior generic source-of-truth discrepancy into a concrete architecture/recovery diagnosis.
+
+**Finding F-20260831-02 — HIGH**  
+**Area:** architecture / reliability / recovery  
+**Evidence:** repository root contains only compiled deployment artefacts (`index.html`, hashed JS/CSS under `assets/`) plus factory documentation; branch list contains only `main`; no open PRs; no maintainable application source/test/package tree is visible.  
+**Risk:** editing minified compiled assets directly would destroy reviewability, testability and migration confidence. It would also make the factory's required planner/executor/reviewer/release loop largely theatrical because deterministic source-level verification is unavailable.  
+**Required evidence or repair:** recover or re-establish the maintainable source tree before feature development. Search durable history/other accessible refs or repositories for the source project; if recoverable, restore it through an auditable branch/PR. If not recoverable, rebuild from the deployed behaviour and approved product contract as a dedicated recovery task rather than silently modifying bundles.  
+**Disposition:** OPEN. The safe orchestration response is to avoid feature edits to compiled assets and prioritize source recovery/re-establishment.  
+**Repair commit/artefact:** this audit entry; no application-code repair claimed.  
+**Reviewer recheck:** PENDING source recovery.
+
+**Ordered next work:** (1) search accessible repository history and installed repositories for maintainable VIP source; (2) identify the last trustworthy source baseline and its relationship to the deployed bundle; (3) restore/re-establish source + deterministic test/build harness through an auditable change; (4) only then resume approved MVP feature work; (5) preserve the newly established Markdown trail for every material loop.  
+**Decisions / user evidence:** no product-owner decision required yet; source recovery is an engineering/reliability prerequisite within the approved direction.  
+**Code metrics:** merged application-code delta 0; documentation-only checkpoint. Compiled/minified bundle size is not reported as first-party LOC because it would be a misleading vanity metric.  
+**Non-code output:** concrete maintainability/recovery diagnosis and ordered recovery queue.  
+**Exact continuation reason:** safe meaningful engineering work remains in source recovery; feature development is intentionally deferred until a maintainable baseline is recovered or re-established.  
+**Observable platform restriction:** none observed.  
+**Agent execution truth:** logical architecture/reliability/reviewer roles were performed serially in one observable execution context; no independent sub-agent is claimed.
