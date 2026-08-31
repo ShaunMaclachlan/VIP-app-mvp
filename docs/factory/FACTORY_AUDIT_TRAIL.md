@@ -148,3 +148,29 @@ This contract was established on 2026-08-30 after the product owner identified t
 **Exact continuation reason:** meaningful safe recovery work remains; implementation should proceed through an isolated auditable recovery branch rather than feature-editing compiled assets.  
 **Observable platform restriction:** none observed.  
 **Agent execution truth:** planner, architecture/recovery and sceptical-review roles were logical serial roles in one observable execution context. No claim of independently running sub-agents is made.
+
+## 2026-08-31 12:00 Europe/London — Recovery execution checkpoint
+
+**Starting main:** `dbca0f150ba85d52ccebe5c06e7b8f467ff0222b`  
+**Execution:** created isolated branch `factory/source-recovery`, committed `docs/factory/recovery/SOURCE_RECOVERY_PLAN.md` and `docs/factory/recovery/BEHAVIOUR_INVENTORY.md`, and opened draft PR #1 (`Recovery: re-establish maintainable VIP source baseline`). The PR is intentionally draft and explicitly barred from merge until maintainable source, reproducible build/tests, behavioural parity, persistence/recovery, mobile compatibility and adversarial-review evidence are present.  
+**Evidence progress:** historical readable MVP behaviour has been classified rather than blindly copied. The inventory explicitly identifies hard-coded £17/hour, Saturday/Sunday/night premiums and lowest-paid-segment break deduction as Loren-prototype/legacy assumptions that must not become generic employer defaults merely because they existed in old code. The recovery plan adds exact-money, Europe/London DST, local-first privacy, versioned persistence, Android Chrome/iPhone Safari and responsive tablet/desktop success gates.  
+**Active lanes:** Architecture; Reliability/Recovery; Documentation/Contracts; Product/Pay-rule provenance; Release Management.  
+**Observable concurrency:** one connected execution context; logical roles serial only.  
+**Loops:** 1 recovery planning/execution loop completed; 0 source implementation loops completed; 0 repair cycles.  
+**Tests / CI / regression:** no application test/build result claimed yet. This checkpoint deliberately creates the auditable recovery workspace and behavioural contract before source implementation.  
+**Checkpoint usefulness:** created independent progress: recovery is now an isolated, inspectable draft PR rather than an intention living only in checkpoint prose.  
+**PR state:** draft PR #1, head `32b3351a2dd51ad2828938a68826b3ada0885a2b`, 2 documentation files, 126 additions, 0 deletions; not merge-ready.  
+**Code metrics:** merged application-code delta 0. Recovery-branch additions are documentation and are not counted as production/test LOC.  
+**Non-code outputs:** executable recovery plan; provenance-aware behaviour inventory; isolated recovery branch; draft PR with explicit merge gate.  
+**Adversarial finding F-20260831-04 — HIGH**  
+**Area:** pay-rule provenance / correctness  
+**Evidence:** initial readable MVP hard-codes base rate and premium multipliers and deducts unpaid break time from the lowest-paid segment.  
+**Risk:** source reconstruction could accidentally turn Loren-specific prototype assumptions into generic employer rules, violating the approved unknown-rule policy and creating confident but wrong pay forecasts for later users.  
+**Required evidence or repair:** recovered domain must represent employer pay/break rules as explicit configuration/unknown; historical constants may be retained only as validated Loren configuration evidence, not product defaults. Golden tests must distinguish legacy parity fixtures from generic behaviour.  
+**Disposition:** OPEN; prevention requirement is now explicit in recovery plan/inventory.  
+**Reviewer recheck:** PENDING domain implementation/tests.  
+**Ordered next work:** (1) inspect later compiled deployment enough to complete dashboard/profile/calendar/backup behaviour inventory; (2) create framework-independent exact-money pay-domain skeleton and legacy golden fixtures on recovery branch; (3) add deterministic test/build harness; (4) add versioned persistence contract; (5) rebuild UI only after domain/persistence gates; (6) perform read-only adversarial review before PR leaves draft.  
+**Decisions / user evidence:** no new product-owner decision required.  
+**Exact continuation reason:** recovery implementation remains meaningful and safe on isolated branch; `main` remains untouched.  
+**Observable platform restriction:** none observed.  
+**Agent execution truth:** this checkpoint used one observable execution context. No independently running sub-agent is claimed.
