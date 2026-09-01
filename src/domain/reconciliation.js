@@ -19,6 +19,6 @@ export function reconcileShift(shift, payConfig) {
     worked: shift.workedHistory?.length ? shift.workedHistory[shift.workedHistory.length - 1] : null,
     forecast,
     paid,
-    variancePence: paid && forecast.status === 'ready' ? paid.totalPence - forecast.totalPence : null,
+    variancePence: paid && forecast.status === 'forecast' ? paid.totalPence - forecast.totalPence : null,
   };
 }
