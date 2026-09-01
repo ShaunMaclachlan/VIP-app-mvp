@@ -12,13 +12,16 @@ export function forecastEffectiveShift(shift, payConfig) {
     };
   }
 
+  const pay = forecastShiftPay({
+    ...effective,
+    baseRatePence: payConfig.baseRatePence,
+    premiumSegments: payConfig.premiumSegments ?? [],
+  });
+
   return {
     status: 'forecast',
     source: shift.workedHistory.length ? 'worked' : 'scheduled',
-    ...forecastShiftPay({
-      ...effective,
-      baseRatePence: payConfig.baseRatePence,
-      premiumSegments: payConfig.premiumSegments ?? [],
-    }),
+    totalPence: pay.grossPence,
+    ...pay,
   };
 }
