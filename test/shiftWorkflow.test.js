@@ -72,3 +72,31 @@ test('unknown scheduled break remains explicit rather than inventing employer ru
   assert.equal(result.forecast.status, 'needs-pay-rule');
   assert.equal(result.forecast.reason, 'unpaid-break-unknown');
 });
+
+test('Planned -> Worked -> Paid persists and reloads with variance explanation', () => {
+  const storage = memoryStorage();
+  const payConfig = { baseRatePence: 1790 };
+  const workflow = createShiftWorkflow({ storage, payConfig });
+  workflow.addScheduled(scheduled);
+  workflow.confirmActual('shift-1', {
+    start: scheduled.start,
+    end: '2026-09-01T14:00:00+01:00',
+    unpaidBreakMinutes: 60,
+    confirmedAt: '2026-09-01T14:05:00+01:00',
+  });
+
+  const paid = workflow.recordActualPaid('shift-1', {
+    totalPence: 10500,
+    recordedAt: '2026-09-30T09:00:00+01:00',
+    reference: 'payroll',
+  });
+  assert.equal(paid.reconciliation.forecast.totalPence, 10740);
+  assert.equal(paid.reconciliation.paid.totalPence, 10500);
+  assert.equal(paid.reconciliation.variancePence, -240);
+
+  const reloaded = createShiftWorkflow({ storage, payConfig }).getReconciliation('shift-1');
+  assert.equal(reloaded.planned.end, scheduled.end);
+  assert.equal(reloaded.worked.end, '2026-09-01T14:00:00+01:00');
+  assert.equal(reloaded.paid.reference, 'payroll');
+  assert.equal(reloaded.variancePence, -240);
+});
