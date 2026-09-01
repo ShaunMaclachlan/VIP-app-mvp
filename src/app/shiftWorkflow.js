@@ -1,5 +1,6 @@
 import { createScheduledShift, confirmWorked } from '../domain/shift.js';
 import { forecastEffectiveShift } from '../domain/forecast.js';
+import { recordPaid, reconcileShift } from '../domain/reconciliation.js';
 import { loadState, saveState } from '../persistence/localStore.js';
 
 function replaceShift(shifts, nextShift) {
@@ -30,10 +31,24 @@ export function createShiftWorkflow({ storage, payConfig }) {
     return { shift, forecast: forecastEffectiveShift(shift, payConfig) };
   }
 
+  function recordActualPaid(id, paid) {
+    const current = state();
+    const existing = current.shifts.find((shift) => shift.id === id);
+    if (!existing) throw new Error('shift not found');
+    const shift = recordPaid(existing, paid);
+    saveState(storage, { ...current, shifts: replaceShift(current.shifts, shift) });
+    return { shift, reconciliation: reconcileShift(shift, payConfig) };
+  }
+
   function getShift(id) {
     const shift = state().shifts.find((item) => item.id === id);
     return shift ? { shift, forecast: forecastEffectiveShift(shift, payConfig) } : null;
   }
 
-  return { addScheduled, confirmActual, getShift, state };
+  function getReconciliation(id) {
+    const shift = state().shifts.find((item) => item.id === id);
+    return shift ? reconcileShift(shift, payConfig) : null;
+  }
+
+  return { addScheduled, confirmActual, recordActualPaid, getShift, getReconciliation, state };
 }
