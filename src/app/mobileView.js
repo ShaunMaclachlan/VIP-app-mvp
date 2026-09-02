@@ -3,6 +3,12 @@ function money(pence) {
   return `£${(pence / 100).toFixed(2)}`;
 }
 
+function signedMoney(pence) {
+  if (!Number.isInteger(pence)) return 'Needs pay rule';
+  const sign = pence < 0 ? '-' : pence > 0 ? '+' : '';
+  return `${sign}£${(Math.abs(pence) / 100).toFixed(2)}`;
+}
+
 function forecastText(forecast) {
   if (!forecast || forecast.status !== 'forecast') return 'Forecast needs pay-rule information';
   return `Forecast ${money(forecast.totalPence)}`;
@@ -21,7 +27,7 @@ export function renderShiftCard(workflow, id) {
     <p>${forecastText(forecast)}</p>
     ${worked ? `<p>Actual: ${worked.start} – ${worked.end}</p>` : ''}
     ${paid ? `<p>Paid: ${money(paid.totalPence)}</p>` : ''}
-    ${reconciliation?.status === 'reconciled' ? `<p>Difference: ${money(reconciliation.variancePence)}</p>` : ''}
+    ${reconciliation?.status === 'reconciled' ? `<p>Difference: ${signedMoney(reconciliation.variancePence)}</p>` : ''}
   </article>`;
 }
 
