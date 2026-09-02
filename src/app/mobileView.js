@@ -4,7 +4,7 @@ function money(pence) {
 }
 
 function forecastText(forecast) {
-  if (!forecast || forecast.status !== 'ready') return 'Forecast needs pay-rule information';
+  if (!forecast || forecast.status !== 'forecast') return 'Forecast needs pay-rule information';
   return `Forecast ${money(forecast.totalPence)}`;
 }
 
