@@ -12,12 +12,13 @@ function memoryStorage() {
   };
 }
 
-const payConfig = { baseRatePence: 1790, breakMinutes: 0, premiums: [] };
+const payConfig = { baseRatePence: 1790, premiumSegments: [] };
 
 const scheduled = {
   id: 'shift-1',
   start: '2026-09-02T07:00:00+01:00',
   end: '2026-09-02T15:00:00+01:00',
+  unpaidBreakMinutes: 0,
 };
 
 test('mobile journey renders scheduled, Worked and Paid truth after each action', () => {
@@ -33,6 +34,7 @@ test('mobile journey renders scheduled, Worked and Paid truth after each action'
   view.confirmActual('shift-1', {
     start: '2026-09-02T07:00:00+01:00',
     end: '2026-09-02T14:00:00+01:00',
+    unpaidBreakMinutes: 0,
     confirmedAt: '2026-09-02T14:01:00+01:00',
   });
   assert.match(root.innerHTML, /Worked shift/);
@@ -54,6 +56,7 @@ test('reload renders persisted Worked state without recreating the shift', () =>
   first.confirmActual('shift-1', {
     start: '2026-09-02T07:00:00+01:00',
     end: '2026-09-02T14:00:00+01:00',
+    unpaidBreakMinutes: 0,
     confirmedAt: '2026-09-02T14:01:00+01:00',
   });
 
